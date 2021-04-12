@@ -6,7 +6,7 @@ module.exports = (app) => {
     app.route('/api/user/signin')
         .post(UserHandler.signin);
     app.route('/api/users')
-        .get(UserHandler.getUsers);
+        .get([SessionHandler.verfiyToken], UserHandler.getUsers);
     app.route('/api/user/delete')
-        .post(UserHandler.deleteUser);
+        .post([SessionHandler.verfiyToken], UserHandler.deleteUser);
 }

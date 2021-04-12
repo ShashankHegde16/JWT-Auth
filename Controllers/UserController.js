@@ -32,7 +32,7 @@ exports.signin = async function (req, res) {
         const accessToken = jwt.sign({ email_id: emailAddress }, process.env.SECRET_KEY, {
             expiresIn: 86400 // 24 hours
         });
-        return res.status(200).json({
+        return res.header("auth-token", accessToken).status(200).json({
             emailAddress,
             accessToken
         });
@@ -54,7 +54,6 @@ exports.getUsers = async function (req, res) {
             { $project: { "email_id": 1, "created_at": 1 } }]);
         return res.status(201).send(response);
     } catch (e) {
-        console.log(e)
         return res.status(400).send('Bad Request..')
     }
 }
@@ -66,7 +65,7 @@ exports.deleteUser = async function (req, res) {
         return res.status(200).send('User id has been removed..');
 
     } catch (e) {
-        return res.status(400).send('Bad Request..');
+        return res.status(400).send('Bad Request/ User doesnt exists..');
     }
 
 }

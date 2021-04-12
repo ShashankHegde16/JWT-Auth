@@ -1,8 +1,13 @@
-exports.verfiySession = function (req, res, next) {
-    if (req.user) {
+const jwt = require("jsonwebtoken");
+
+exports.verfiyToken = function (req, res, next) {
+    const token = req.header("auth-token");
+    if (!token) return res.status(401).json({ error: "You are not authorised to access this end point.." });
+    try {
+        const verified = jwt.verify(token, process.env.SECRET_KEY);
+        req.user = verified;
         next();
-    }
-    else {
-        return res.status(401).json({ error: "Unauthorised!!" });
+    } catch (err) {
+        res.status(400).json({ error: "Session expired.." });
     }
 }
